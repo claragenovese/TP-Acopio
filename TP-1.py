@@ -1,4 +1,7 @@
 from os import system, name
+def prCyan(skk): print("\033[96m {}\033[00m" .format(skk))
+def prPurple(skk): print("\033[95m {}\033[00m" .format(skk))
+def prYellow(skk): print("\033[93m {}\033[00m" .format(skk))
 
 seleccionPrincipal = -1
 camionesSoja = 0
@@ -9,11 +12,13 @@ mayorCantSoja = -1
 menorCantMaiz = -1
 patenteMayorSoja = '0'
 patenteMenorMaiz = '0'
-menuPrincipal = ["1 - Administraciones\n","2 - Entrega de Cupos\n","3 - Recepcion\n","4 - Registrar Calidad\n","5 - Registrar Peso Bruto\n","6 - Registrar Descarga\n","7 - Registrar Tara\n","8 - Reportes\n","0 - Fin del programa\n"]
-menuAdministraciones = ["A - Titulares\n","B - Productos\n","C - Rubros\n","D - Rubros x Producto\n","E - Silos\n","F - Sucursales\n","G - Producto Por Titular\n","V - Volver al Menu Principal\n"]
-menuABM = ["A - Alta\n", "B - Baja\n","C - Consulta\n","M - Modificacion\n","V - Volver al Menu Anterior\n"]
+menuPrincipal = ["1 - Administraciones","2 - Entrega de Cupos","3 - Recepcion","4 - Registrar Calidad","5 - Registrar Peso Bruto","6 - Registrar Descarga","7 - Registrar Tara","8 - Reportes","0 - Fin del programa"]
+menuAdministraciones = ["A - Titulares","B - Productos","C - Rubros","D - Rubros x Producto","E - Silos","F - Sucursales","G - Producto Por Titular","V - Volver al Menu Principal"]
+menuABM = ["A - Alta", "B - Baja","C - Consulta","M - Modificacion","V - Volver al Menu Anterior"]
 
 # FUNCIONES GENERALES
+
+
 
 def clear():
    if name == 'nt':
@@ -22,8 +27,9 @@ def clear():
         _ = system('clear')
 
 def imprimirMenu(arrMenu,longArr):
+    prYellow("------")
     for i in range(0,longArr):
-        print(arrMenu[i])
+        prPurple(arrMenu[i])
 
 def elegirElementoDeMenu(esEntero = False):
     if(esEntero == True):
@@ -162,4 +168,4 @@ while(seleccionPrincipal!=0):
     seleccionPrincipal = elegirElementoDeMenu(True)
     seleccionarMenuPrincipal(seleccionPrincipal)
 
-print("Finalizacion del programa\n")
+prCyan("Finalizacion del programa\n")
