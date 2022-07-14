@@ -1,3 +1,5 @@
+from os import system, name
+
 seleccionPrincipal = -1
 camionesSoja = 0
 camionesMaiz = 0
@@ -13,6 +15,12 @@ menuABM = ["A - Alta\n", "B - Baja\n","C - Consulta\n","M - Modificacion\n","V -
 
 # FUNCIONES GENERALES
 
+def clear():
+   if name == 'nt':
+        _ = system('cls')
+   else:
+        _ = system('clear')
+
 def imprimirMenu(arrMenu,longArr):
     for i in range(0,longArr):
         print(arrMenu[i])
@@ -26,8 +34,10 @@ def elegirElementoDeMenu(esEntero = False):
     
 def imprimirMenuEnConstruccion(menu):
     print("El menu:",menu,"esta en construccion\n")
+# FUNCIONES GENERALES
 
 def realizarAccionABM(seleccion,nombreMenu):
+    clear()
     if seleccion=='A': imprimirMenuEnConstruccion("Alta\n")
     elif seleccion=='B': imprimirMenuEnConstruccion("Baja\n")
     elif seleccion=='C': imprimirMenuEnConstruccion("Consulta\n")
@@ -43,11 +53,11 @@ def abrirMenuABM(nombreMenu):
         seleccionABM = input("Seleccionar una accion ABM:\n")
         realizarAccionABM(seleccionABM,nombreMenu)
 
-# FUNCIONES GENERALES
 
 # FUNCIONES MENU PRINCIPAL
 
 def seleccionarMenuPrincipal(seleccion):
+    clear()
     if seleccion==1: abrirMenuAdministraciones()
     elif seleccion==2: imprimirMenuEnConstruccion("Entrega de cupos\n")
     elif seleccion==3: abrirMenuRecepcion()
@@ -64,6 +74,7 @@ def seleccionarMenuPrincipal(seleccion):
 # FUNCIONES ADMINISTRACION
 
 def seleccionarMenuAdministracion(seleccion):
+    clear()
     if seleccion=='A': abrirMenuABM("Titulares\n")
     elif seleccion=='B': abrirMenuABM("NOMBRE\n")
     elif seleccion=='C': abrirMenuABM("NOMBRE\n")
@@ -130,6 +141,7 @@ def abrirMenuRecepcion():
 # FUNCIONES REPORTE
 
 def imprimirReporte():
+    clear()
     global camionesMaiz , camionesSoja, pNetoSoja, pNetoMaiz
     print("La cantidad total de camiones es:\n",camionesSoja+camionesMaiz)
     print("La cantidad total de camiones de soja es:\n",camionesSoja)
