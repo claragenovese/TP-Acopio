@@ -30,6 +30,7 @@ def imprimirMenu(arrMenu,longArr):
     prYellow("------")
     for i in range(0,longArr):
         prPurple(arrMenu[i])
+    prYellow("------")
 
 def elegirElementoDeMenu(esEntero = False):
     if(esEntero == True):
@@ -40,6 +41,40 @@ def elegirElementoDeMenu(esEntero = False):
     
 def imprimirMenuEnConstruccion(menu):
     print("El menu:",menu,"esta en construccion\n")
+    
+def elementoEnArreglo(elemento,arr,longArr):
+    for i in range(longArr):
+        if(elemento == arr[i]):
+            return True
+    return False
+
+def ingresarPrimerLugarVacio(elemento,arr,longArr):
+    for i in range(longArr):
+        if(arr[i] == ""):
+            arr[i] = elemento
+            return print(elemento,"ingresado en",i)
+    return print("No habia posiciones vacias")
+
+        
+def esArregloLleno(arr,longArr):
+    for i in range(0,longArr):
+        if(arr[i]==""):
+            return False
+    return True
+
+def esArregloVacio(arr,longArr):
+    for i in range(0,longArr):
+        if(arr[i]!=""):
+            return False
+    return True
+    
+def imprimirElementosDeArreglo(arr,longArr):
+    if(esArregloVacio(arr,longArr)):return prYellow("Sin elementos")
+    for i in range(longArr):
+        if(arr[i]!=""):
+            print(i, "-" ,arr[i])
+
+
 # FUNCIONES GENERALES
 
 def realizarAccionABM(seleccion,nombreMenu):
@@ -52,7 +87,9 @@ def realizarAccionABM(seleccion,nombreMenu):
     else: print("Ingresar una seleccion valida\n")
 
 def abrirMenuABM(nombreMenu):
-    print("Estamos en el menu de: ",nombreMenu)
+    clear()
+    prYellow("Menu ABM de: ")
+    prPurple(nombreMenu)
     seleccionABM = '0'
     while(seleccionABM != 'V'):
         imprimirMenu(menuABM,5)
@@ -77,17 +114,103 @@ def seleccionarMenuPrincipal(seleccion):
 # FUNCIONES MENU PRINCIPAL
 
 
+
+
 # FUNCIONES ADMINISTRACION
+
+poolProductos = ["TRIGO","SOJA","MAIZ","GIRASOL","CEBADA"]
+productos = ["TRIGO","",""]
+
+# FUNCIONES ADMINISTRACION - ALTA
+
+def imprimirProductosNoSeleccionados():
+    prPurple("Los productos posibles a ingresar son:")
+    for idxPool in range(0,5):
+        encontrado = False
+        for idxProductos in range(0,3):
+            if(poolProductos[idxPool]==productos[idxProductos]):
+                encontrado = True
+            if(idxProductos==2 and encontrado == False):
+                prYellow(poolProductos[idxPool])
+    
+def validarProductoIngresado(productoAIngresar):
+    if(elementoEnArreglo(productoAIngresar,productos,3)):
+        prCyan("El producto ya fue ingresado")
+        return False
+    if(not elementoEnArreglo(productoAIngresar,poolProductos,5)):
+        prCyan("El producto no existe")
+        return False
+    return True
+        
+def darDeAltaProducto():
+    clear()
+    if(esArregloLleno(productos,3) == True):
+        return print("El arreglo de productos está lleno")
+    imprimirProductosNoSeleccionados()
+    productoAIngresar = input("Seleccione uno de ellos:").upper()
+    if(validarProductoIngresado(productoAIngresar)):
+        ingresarPrimerLugarVacio(productoAIngresar,productos,3)
+        print("INGRESADO!")        
+
+# FUNCIONES ADMINISTRACION - BAJA
+
+def darDeBajaProducto():
+    clear()
+    if(esArregloVacio(productos,3)):return print("no hay nada que dar de baja")
+    imprimirElementosDeArreglo(productos,3)
+    idxEliminar = int(input("Ingresar el indice del producto a eliminar: "))
+    if(idxEliminar >= 3 or idxEliminar < 0): return prYellow("Ingresar un indice entre 0 y 2")
+    if(productos[idxEliminar]==""): return prYellow("La casilla no contiene un producto")
+    clear()
+    productos[idxEliminar]=""
+    return prCyan("Producto eliminado")
+
+# FUNCIONES ADMINISTRACION - MODIFICACION
+
+def modificarProducto():
+    clear()
+    if(esArregloVacio(productos,3)):return print("no hay nada que modificar")
+    imprimirElementosDeArreglo(productos,3)
+    idxModificar = int(input("Ingresar el indice del producto a modificar: "))
+    if(idxModificar >= 3 or idxModificar < 0): return prYellow("Ingresar un indice entre 0 y 2")
+    if(productos[idxModificar]==""): return prYellow("La casilla no contiene un producto")
+    clear()
+    imprimirProductosNoSeleccionados()
+    productoAIngresar = input("Seleccione uno de ellos:").upper()
+    if(validarProductoIngresado(productoAIngresar)):
+        productos[idxModificar] = productoAIngresar
+        return prCyan("MODIFICADO!")        
+
+
+def administracionProductoRouter(seleccion):
+    clear()
+    if seleccion=='A': darDeAltaProducto()
+    elif seleccion=='B': darDeBajaProducto()
+    elif seleccion=='C': imprimirElementosDeArreglo(productos,3)
+    elif seleccion=='M': modificarProducto()
+    elif seleccion=='V': print("Volviendo al menu de: ADMINISTRACION")
+    else: print("Ingresar una seleccion valida\n")
+
+def abrirAdministracionProductoABM():
+    clear()
+    prYellow("Menu ABM de: ")
+    prCyan("ADMINISTRACION - PRODUCTO")
+    seleccionABM = '0'
+    while(seleccionABM != 'V'):
+        imprimirMenu(menuABM,5)
+        seleccionABM = input("Seleccionar una accion ABM:\n")
+        administracionProductoRouter(seleccionABM)
+
 
 def seleccionarMenuAdministracion(seleccion):
     clear()
-    if seleccion=='A': abrirMenuABM("Titulares\n")
-    elif seleccion=='B': abrirMenuABM("NOMBRE\n")
-    elif seleccion=='C': abrirMenuABM("NOMBRE\n")
-    elif seleccion=='D': abrirMenuABM("NOMBRE\n")
-    elif seleccion=='E': abrirMenuABM("NOMBRE\n")
-    elif seleccion=='F': abrirMenuABM("NOMBRE\n")
-    elif seleccion=='G': abrirMenuABM("NOMBRE\n")
+    if seleccion=='A': abrirMenuABM("Administracion\n")
+    elif seleccion=='B': abrirAdministracionProductoABM()
+    elif seleccion=='C': abrirMenuABM("Administracion\n")
+    elif seleccion=='D': abrirMenuABM("Administracion\n")
+    elif seleccion=='E': abrirMenuABM("Administracion\n")
+    elif seleccion=='F': abrirMenuABM("Administracion\n")
+    elif seleccion=='G': abrirMenuABM("Administracion\n")
     elif seleccion=='V': print("Volviendo al menu principal\n")
     else: print("Ingresar una seleccion valida\n")
 
