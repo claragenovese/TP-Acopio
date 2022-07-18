@@ -161,6 +161,7 @@ def darDeBajaProducto():
     idxEliminar = int(input("Ingresar el indice del producto a eliminar: "))
     if(idxEliminar >= 3 or idxEliminar < 0): return prYellow("Ingresar un indice entre 0 y 2")
     if(productos[idxEliminar]==""): return prYellow("La casilla no contiene un producto")
+    # VERIFICAR QUE NO TENGA CAMIONES ASOCIADOS
     clear()
     productos[idxEliminar]=""
     return prCyan("Producto eliminado")
@@ -178,6 +179,7 @@ def modificarProducto():
     imprimirProductosNoSeleccionados()
     productoAIngresar = input("Seleccione uno de ellos:").upper()
     if(validarProductoIngresado(productoAIngresar)):
+        # VERIFICAR QUE NO TENGA CAMIONES ASOCIADOS
         productos[idxModificar] = productoAIngresar
         return prCyan("MODIFICADO!")        
 
