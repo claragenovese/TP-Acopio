@@ -52,7 +52,7 @@ def ingresarPrimerLugarVacio(elemento,arr,longArr):
     for i in range(longArr):
         if(arr[i] == ""):
             arr[i] = elemento
-            return print(elemento,"ingresado en",i)
+            return 
     return print("No habia posiciones vacias")
 
         
@@ -79,7 +79,26 @@ def buscarElementoEnArreglo(el,arr,longArr):
         if(arr[i]==el):
             return i
     return -1
-    
+   
+def acumularSiCondicion(arr,condicion,distinto = False):
+    acumulador = 0
+    for i in range(0,8):
+        if(distinto):
+            if(arr[i] != condicion):
+                acumulador = acumulador + 1
+        else:
+            if(arr[i] == condicion):
+                acumulador = acumulador + 1
+    return acumulador
+
+def ordenarArreglo(arr):
+        for i in range(0,8):
+            for j in range(i+1,8):
+                if(arr[i]!="" and arr[j]!=""):
+                    if(arr[i]<arr[j]):
+                        aux = arr[j]
+                        arr[j] = arr[i]
+                        arr[i] = aux 
 
 # FUNCIONES GENERALES
 
@@ -124,8 +143,6 @@ def seleccionarMenuPrincipal(seleccion):
 
 # FUNCIONES ADMINISTRACION
 
-poolProductos = ["TRIGO","SOJA","MAIZ","GIRASOL","CEBADA"]
-productos = ["TRIGO","",""]
 
 # FUNCIONES ADMINISTRACION - ALTA
 
@@ -230,8 +247,7 @@ def abrirMenuAdministraciones():
 # FUNCIONES ADMINISTRACION
 
 # FUNCIONES INGRESAR PESO BRUTO
-patenteData = [["paten1","paten2","paten3"],["E","P","C"]]
-pesosArr=[[150,321,4064],[0,32,0]] # PESO BRUTO / TARA
+
 
 def verificarPatente(patente):
     return len(patente)>=6 and len(patente)<=7
@@ -314,20 +330,63 @@ def abrirMenuRecepcion():
 
 # FUNCIONES REPORTE
 
+poolProductos = ["TRIGO","SOJA","MAIZ","GIRASOL","CEBADA"]
+productos = ["TRIGO","MAIZ","CEBADA"]
+patenteData = [["paten1","paten2","paten3","paten4","paten5","paten6","paten7","paten8"],["E","P","C","C","C","C","C","C"]]
+productosCamiones = ["TRIGO","MAIZ","MAIZ","MAIZ","TRIGO","CEBADA","CEBADA","CEBADA"]
+pesosArr=[[150,321,2000,2000,1000,3000,1000,2000],[10,32,1000,1000,100,1000,100,1000]] # PESO BRUTO / TARA
+
+def copiarSiCamionCompleto(arrACopiar,esPesoNeto=False):
+    arr = ["","","","","","","",""]
+    for i in range(0,8):
+        if(patenteData[1][i]=="C"):
+            if(esPesoNeto==False):
+                ingresarPrimerLugarVacio(arrACopiar[i],arr,8)
+            else:
+                ingresarPrimerLugarVacio(pesosArr[0][i]-pesosArr[1][i],arr,8)
+    return arr
+    
 def imprimirReporte():
     clear()
-    global camionesMaiz , camionesSoja, pNetoSoja, pNetoMaiz
-    print("La cantidad total de camiones es:\n",camionesSoja+camionesMaiz)
-    print("La cantidad total de camiones de soja es:\n",camionesSoja)
-    print("La cantidad total de camiones de maiz:\n",camionesMaiz)
-    print("El peso neto de soja es:\n",pNetoSoja)
-    print("El peso neto de maiz es:\n",pNetoMaiz)
-    if camionesSoja != 0: 
-        print("El promedio del peso neto de soja por camion es:\n",pNetoSoja/camionesSoja)
-    if camionesMaiz != 0: 
-        print("El promedio del peso neto de maiz por camion es:\n",pNetoMaiz/camionesMaiz)
-    print("El camion que mas soja descargo es:\n",patenteMayorSoja)
-    print("El camion que menos maiz descargo es:\n",patenteMenorMaiz)
+    prCyan("------------")       
+    print("Se otorgaron ",acumularSiCondicion(patenteData[1],"",True)," cupos")
+    print("Se recibieron ",acumularSiCondicion(patenteData[1],"E") + acumularSiCondicion(patenteData[1],"C")," camiones")
+    for prodIdx in range(0,3):
+        pesoNetoTot = 0
+        cantidad = 0
+        arrMayorMenor = [0,999999]
+        arrPatenteMayorMenor = ["",""]
+        if(productos[prodIdx]!=""):
+            for camIdx in range(0,8):
+               if(patenteData[1][camIdx]=="C" and productosCamiones[camIdx]==productos[prodIdx]):
+                   pesoNetoCamion = pesosArr[0][camIdx] - pesosArr[1][camIdx]
+                   patenteCamion = patenteData[0][camIdx]
+                   cantidad = cantidad + 1
+                   pesoNetoTot = pesoNetoTot + pesoNetoCamion
+                   if(pesoNetoCamion>arrMayorMenor[0]): 
+                       arrMayorMenor[0] = pesoNetoCamion
+                       arrPatenteMayorMenor[0] = patenteCamion
+                   if(pesoNetoCamion<arrMayorMenor[1]): 
+                       arrMayorMenor[1] = pesoNetoCamion
+                       arrPatenteMayorMenor[1] = patenteCamion
+            prCyan("------------")       
+            print("Hay ",cantidad," camiones de ",productos[prodIdx])
+            print("El peso neto de ",productos[prodIdx],"es ", pesoNetoTot ,"kg")
+            print("El peso neto promedio de camion de ",productos[prodIdx],"es ", pesoNetoTot/cantidad ,"kg")
+            print("El camion que mas ",productos[prodIdx],"descargo es ", arrPatenteMayorMenor[0],"con ",arrMayorMenor[0] ,"kg")
+            print("El camion que menos ",productos[prodIdx],"descargo es ", arrPatenteMayorMenor[1],"con ",arrMayorMenor[1] ,"kg")
+            prCyan("------------")  
+
+    prCyan("------------")       
+    patenteCopia = copiarSiCamionCompleto(patenteData[0])
+    productoCopia = copiarSiCamionCompleto(productosCamiones)
+    pesosNetos = copiarSiCamionCompleto([],True)
+    ordenarArreglo(pesosNetos)
+    ordenarArreglo(productoCopia)
+    ordenarArreglo(patenteCopia)
+    for i in range(0,8):
+        if(patenteCopia[i]!=""):
+            print(patenteCopia[i] ,"-", productoCopia[i] , "-", pesosNetos[i])
 
 # FUNCIONES REPORTE
 
