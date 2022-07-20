@@ -74,6 +74,12 @@ def imprimirElementosDeArreglo(arr,longArr):
         if(arr[i]!=""):
             print(i, "-" ,arr[i])
 
+def buscarElementoEnArreglo(el,arr,longArr):
+    for i in range(0,longArr):
+        if(arr[i]==el):
+            return i
+    return -1
+    
 
 # FUNCIONES GENERALES
 
@@ -105,9 +111,9 @@ def seleccionarMenuPrincipal(seleccion):
     elif seleccion==2: imprimirMenuEnConstruccion("Entrega de cupos\n")
     elif seleccion==3: abrirMenuRecepcion()
     elif seleccion==4: imprimirMenuEnConstruccion("Registrar Calidad\n")
-    elif seleccion==5: imprimirMenuEnConstruccion("Registrar Peso Bruto\n")
+    elif seleccion==5: abrirMenuPesoBruto()
     elif seleccion==6: imprimirMenuEnConstruccion("Registrar Descarga\n")
-    elif seleccion==7: imprimirMenuEnConstruccion("Registrar Tara\n")
+    elif seleccion==7: abrirMenuPesoTara()
     elif seleccion==8: imprimirReporte()
     else: print("Ingresar una seleccion valida\n")
 
@@ -161,6 +167,7 @@ def darDeBajaProducto():
     idxEliminar = int(input("Ingresar el indice del producto a eliminar: "))
     if(idxEliminar >= 3 or idxEliminar < 0): return prYellow("Ingresar un indice entre 0 y 2")
     if(productos[idxEliminar]==""): return prYellow("La casilla no contiene un producto")
+    # VERIFICAR QUE NO TENGA CAMIONES ASOCIADOS
     clear()
     productos[idxEliminar]=""
     return prCyan("Producto eliminado")
@@ -178,9 +185,9 @@ def modificarProducto():
     imprimirProductosNoSeleccionados()
     productoAIngresar = input("Seleccione uno de ellos:").upper()
     if(validarProductoIngresado(productoAIngresar)):
+        # VERIFICAR QUE NO TENGA CAMIONES ASOCIADOS
         productos[idxModificar] = productoAIngresar
         return prCyan("MODIFICADO!")        
-
 
 def administracionProductoRouter(seleccion):
     clear()
@@ -200,7 +207,6 @@ def abrirAdministracionProductoABM():
         imprimirMenu(menuABM,5)
         seleccionABM = input("Seleccionar una accion ABM:\n")
         administracionProductoRouter(seleccionABM)
-
 
 def seleccionarMenuAdministracion(seleccion):
     clear()
@@ -222,6 +228,45 @@ def abrirMenuAdministraciones():
         seleccionarMenuAdministracion(seleccionAdministraciones)
 
 # FUNCIONES ADMINISTRACION
+
+# FUNCIONES INGRESAR PESO BRUTO
+patenteData = [["paten1","paten2","paten3"],["E","P","C"]]
+pesosArr=[[150,321,4064],[0,32,0]] # PESO BRUTO / TARA
+
+def verificarPatente(patente):
+    return len(patente)>=6 and len(patente)<=7
+
+def abrirMenuPesoBruto():
+    clear()
+    patenteTentativa = input("Ingresar una patente: ")
+    if(not verificarPatente(patenteTentativa)): return prYellow("La patente tiene que estar entre 6 y 7 caracteres")
+    indicePatente = buscarElementoEnArreglo(patenteTentativa,patenteData[0],3)
+    if(indicePatente==-1): return prYellow("La patente ingresada no existe")
+    if(patenteData[1][indicePatente]!="E"): return prYellow("El estado de la patente seleccionada no es En Proceso")
+    if(pesosArr[0][indicePatente]!=0): return prYellow("El camion ya tiene registrado un peso bruto")
+    pesosArr[0][indicePatente] = int(input("Ingresar el peso bruto del camion: "))
+    prCyan("Guardado!")
+
+# FUNCIONES INGRESAR PESO BRUTO
+
+# FUNCIONES INGRESAR PESO TARA
+
+def abrirMenuPesoTara():
+    clear()
+    patenteTentativa = input("Ingresar una patente: ")
+    if(not verificarPatente(patenteTentativa)): return prYellow("La patente tiene que estar entre 6 y 7 caracteres")
+    indicePatente = buscarElementoEnArreglo(patenteTentativa,patenteData[0],3)
+    if(indicePatente==-1): return prYellow("La patente ingresada no existe")
+    if(patenteData[1][indicePatente]!="E"): return prYellow("El estado de la patente seleccionada no es En Proceso")
+    if(pesosArr[0][indicePatente]==0): return prYellow("El camion no tiene registrado un peso bruto")
+    if(pesosArr[1][indicePatente]!=0): return prYellow("El camion ya tiene registrado un peso tara")
+    taraTentativa = int(input("Ingresar el peso tara del camion: "))
+    if(taraTentativa>=pesosArr[0][indicePatente]): return prYellow("La tara no puede ser mayor o igual al peso bruto")
+    pesosArr[0][indicePatente] = taraTentativa
+    patenteData[1][indicePatente] = "C"
+    prCyan("Guardada y cambiado estado del camion a completado!")
+
+# FUNCIONES INGRESAR PESO TARA
 
 # FUNCIONES RECEPCION
 def cargaDatosYMostrarPesoNetoCamion():
