@@ -15,7 +15,7 @@ patenteMenorMaiz = '0'
 menuPrincipal = ["1 - Administraciones","2 - Entrega de Cupos","3 - Recepcion","4 - Registrar Calidad","5 - Registrar Peso Bruto","6 - Registrar Descarga","7 - Registrar Tara","8 - Reportes","0 - Fin del programa"]
 menuAdministraciones = ["A - Titulares","B - Productos","C - Rubros","D - Rubros x Producto","E - Silos","F - Sucursales","G - Producto Por Titular","V - Volver al Menu Principal"]
 menuABM = ["A - Alta", "B - Baja","C - Consulta","M - Modificacion","V - Volver al Menu Anterior"]
-
+patenteData = [["","","","","","","",""],["","","","","","","",""]]
 # FUNCIONES GENERALES
 
 
@@ -127,7 +127,7 @@ def abrirMenuABM(nombreMenu):
 def seleccionarMenuPrincipal(seleccion):
     clear()
     if seleccion==1: abrirMenuAdministraciones()
-    elif seleccion==2: imprimirMenuEnConstruccion("Entrega de cupos\n")
+    elif seleccion==2: abrirEntregaDeCupos()
     elif seleccion==3: abrirMenuRecepcion()
     elif seleccion==4: imprimirMenuEnConstruccion("Registrar Calidad\n")
     elif seleccion==5: abrirMenuPesoBruto()
@@ -246,6 +246,107 @@ def abrirMenuAdministraciones():
 
 # FUNCIONES ADMINISTRACION
 
+# FUNCIONES ENTREGA DE CUPOS
+
+def cargarPatenteYEstado(patente):
+    idx = 0
+    while(patenteData[0][idx]!= ""):
+        idx = idx + 1
+    patenteData[0][idx] = patente
+    patenteData[1][idx] = "P"
+
+
+def abrirEntregaDeCupos():
+    if patenteData[0][7] != "" : 
+        print("Se alcanzo la cantidad maxima de cupos diarios.")
+    else :
+        patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ") 
+        if(patenteIngresada != '0') : 
+            estaEnElArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
+            esValida = verificarPatente(patenteIngresada)
+            while (not esValida or estaEnElArreglo != -1):
+                if(patenteIngresada == '0'): break
+                print(esValida, patenteIngresada)
+                if(not esValida): print("La patente tiene que estar entre 6 y 7 caracteres")
+                else : print("La patente ya fue registrada")
+                patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ")   
+                estaEnElArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
+                esValida = verificarPatente(patenteIngresada)
+            cargarPatenteYEstado(patenteIngresada)
+            print("Patente ingresada exitosamente")
+            print(patenteData)
+
+# FUNCIONES ENTREGA DE CUPOS
+
+
+# FUNCIONES RECEPCION
+def cambiarEstado(posicion, nuevoEstado):
+    patenteData[1][posicion] = nuevoEstado
+
+def abrirMenuRecepcion():
+    print("--- En el Menu De Recepcion ---\n")
+    patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ") 
+    if(patenteIngresada != '0') :  
+        posEnArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
+        esValida = verificarPatente(patenteIngresada)
+        print(posEnArreglo)
+        if(posEnArreglo != -1): estado = patenteData[1][posEnArreglo]
+        while (not esValida or posEnArreglo == -1 or estado != 'P'):
+            if(patenteIngresada == '0'): break
+            if(not esValida): print("La patente tiene que tener entre 6 y 7 caracteres")
+            elif(posEnArreglo == -1): print("La patente no se encuentra registrada")
+            else : print("El estado del camion no es Pendiente")
+            patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ")   
+            posEnArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
+            esValida = verificarPatente(patenteIngresada)
+            if(posEnArreglo != -1): estado = patenteData[1][posEnArreglo]
+        cambiarEstado(posEnArreglo, 'E')
+        print("Camion ingresado exitosamente")
+        print(patenteData)
+
+# def cargaDatosYMostrarPesoNetoCamion():
+#     patente = input("Cargar la patente del camion\n")
+#     producto = input("Ingresar el producto (soja|maiz)\n")
+#     validarIngresoProducto(producto)
+#     pesoBruto = int(input("Cargar el peso bruto del camion\n"))
+#     tara = int(input("Cargar la tara del camion\n"))
+#     pesoNeto = obtenerPesoNeto(patente,pesoBruto,tara)
+#     actualzarValoresReportes(patente,producto,pesoNeto)
+
+# def actualzarValoresReportes(patente,producto,pesoNeto):
+#     global camionesSoja, pNetoMaiz, pNetoSoja, patenteMayorSoja, patenteMenorMaiz, camionesMaiz, camionesSoja, mayorCantSoja, menorCantMaiz
+#     if(producto=="soja"):
+#         camionesSoja = camionesSoja+1
+#         pNetoSoja = pNetoSoja+pesoNeto
+#         if(pesoNeto>mayorCantSoja): 
+#             mayorCantSoja = pesoNeto
+#             patenteMayorSoja = patente
+#     if(producto=="maiz"):
+#         camionesMaiz = camionesMaiz + 1
+#         pNetoMaiz = pNetoMaiz + pesoNeto
+#         if(pesoNeto<menorCantMaiz): 
+#             menorCantMaiz = pesoNeto
+#             patenteMenorMaiz = patente
+
+# def validarIngresoProducto(producto):
+#     while(producto!="soja" and producto!='maiz'):
+#         producto = input("Por favor ingresar un producto valido (soja|maiz)\n")
+
+# def obtenerPesoNeto(patente,pesoBruto,tara):
+#     resultado = pesoBruto-tara
+#     print("El peso neto de", patente ,"es:", pesoBruto-tara)
+#     return resultado
+
+# def abrirMenuRecepcion():
+#     seguirCargando = 'Y'
+#     
+#     while(seguirCargando == 'Y'):
+#         cargaDatosYMostrarPesoNetoCamion()
+#         seguirCargando = input("Si se desea seguir cargando camiones escribir Y, de lo contrario escribir N: \n")
+
+# FUNCIONES RECEPCION
+
+
 # FUNCIONES INGRESAR PESO BRUTO
 
 
@@ -284,55 +385,11 @@ def abrirMenuPesoTara():
 
 # FUNCIONES INGRESAR PESO TARA
 
-# FUNCIONES RECEPCION
-def cargaDatosYMostrarPesoNetoCamion():
-    patente = input("Cargar la patente del camion\n")
-    producto = input("Ingresar el producto (soja|maiz)\n")
-    validarIngresoProducto(producto)
-    pesoBruto = int(input("Cargar el peso bruto del camion\n"))
-    tara = int(input("Cargar la tara del camion\n"))
-    pesoNeto = obtenerPesoNeto(patente,pesoBruto,tara)
-    actualzarValoresReportes(patente,producto,pesoNeto)
-
-def actualzarValoresReportes(patente,producto,pesoNeto):
-    global camionesSoja, pNetoMaiz, pNetoSoja, patenteMayorSoja, patenteMenorMaiz, camionesMaiz, camionesSoja, mayorCantSoja, menorCantMaiz
-    if(producto=="soja"):
-        camionesSoja = camionesSoja+1
-        pNetoSoja = pNetoSoja+pesoNeto
-        if(pesoNeto>mayorCantSoja): 
-            mayorCantSoja = pesoNeto
-            patenteMayorSoja = patente
-    if(producto=="maiz"):
-        camionesMaiz = camionesMaiz + 1
-        pNetoMaiz = pNetoMaiz + pesoNeto
-        if(pesoNeto<menorCantMaiz): 
-            menorCantMaiz = pesoNeto
-            patenteMenorMaiz = patente
-
-def validarIngresoProducto(producto):
-    while(producto!="soja" and producto!='maiz'):
-        producto = input("Por favor ingresar un producto valido (soja|maiz)\n")
-
-def obtenerPesoNeto(patente,pesoBruto,tara):
-    resultado = pesoBruto-tara
-    print("El peso neto de", patente ,"es:", pesoBruto-tara)
-    return resultado
-
-def abrirMenuRecepcion():
-    seguirCargando = 'Y'
-    print("--- En el Menu De Recepcion ---\n")
-    while(seguirCargando == 'Y'):
-        cargaDatosYMostrarPesoNetoCamion()
-        seguirCargando = input("Si se desea seguir cargando camiones escribir Y, de lo contrario escribir N: \n")
-
-
-# FUNCIONES RECEPCION
 
 # FUNCIONES REPORTE
 
 poolProductos = ["TRIGO","SOJA","MAIZ","GIRASOL","CEBADA"]
 productos = ["TRIGO","MAIZ","CEBADA"]
-patenteData = [["paten1","paten2","paten3","paten4","paten5","paten6","paten7","paten8"],["E","P","C","C","C","C","C","C"]]
 productosCamiones = ["TRIGO","MAIZ","MAIZ","MAIZ","TRIGO","CEBADA","CEBADA","CEBADA"]
 pesosArr=[[150,321,2000,2000,1000,3000,1000,2000],[10,32,1000,1000,100,1000,100,1000]] # PESO BRUTO / TARA
 
@@ -389,7 +446,6 @@ def imprimirReporte():
             print(patenteCopia[i] ,"-", productoCopia[i] , "-", pesosNetos[i])
 
 # FUNCIONES REPORTE
-
 while(seleccionPrincipal!=0):
     imprimirMenu(menuPrincipal,9)
     seleccionPrincipal = elegirElementoDeMenu(True)
