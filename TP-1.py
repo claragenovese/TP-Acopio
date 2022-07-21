@@ -100,6 +100,9 @@ def ordenarArreglo(arr):
                         arr[j] = arr[i]
                         arr[i] = aux 
 
+def cambiarEstado(posicion, nuevoEstado):
+    patenteData[1][posicion] = nuevoEstado
+
 # FUNCIONES GENERALES
 
 def realizarAccionABM(seleccion,nombreMenu):
@@ -252,8 +255,8 @@ def cargarPatenteYEstado(patente):
     idx = 0
     while(patenteData[0][idx]!= ""):
         idx = idx + 1
-    patenteData[0][idx] = patente
     patenteData[1][idx] = "P"
+    patenteData[0][idx] = patente
 
 
 def abrirEntregaDeCupos():
@@ -261,94 +264,51 @@ def abrirEntregaDeCupos():
         print("Se alcanzo la cantidad maxima de cupos diarios.")
     else :
         patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ") 
-        if(patenteIngresada != '0') : 
-            estaEnElArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
+        posEnArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
+        esValida = verificarPatente(patenteIngresada)
+        while (not esValida or posEnArreglo != -1):
+            if(patenteIngresada == '0'): break
+            print(esValida, patenteIngresada)
+            if(not esValida): print("La patente tiene que estar entre 6 y 7 caracteres")
+            else : print("La patente ya fue registrada")
+            patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ")   
+            posEnArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
             esValida = verificarPatente(patenteIngresada)
-            while (not esValida or estaEnElArreglo != -1):
-                if(patenteIngresada == '0'): break
-                print(esValida, patenteIngresada)
-                if(not esValida): print("La patente tiene que estar entre 6 y 7 caracteres")
-                else : print("La patente ya fue registrada")
-                patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ")   
-                estaEnElArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
-                esValida = verificarPatente(patenteIngresada)
-            cargarPatenteYEstado(patenteIngresada)
-            print("Patente ingresada exitosamente")
-            print(patenteData)
+        if(patenteIngresada == '0'): return
+        cargarPatenteYEstado(patenteIngresada)
+        print("Patente ingresada exitosamente")
+        print(patenteData)
 
 # FUNCIONES ENTREGA DE CUPOS
 
 
 # FUNCIONES RECEPCION
-def cambiarEstado(posicion, nuevoEstado):
-    patenteData[1][posicion] = nuevoEstado
 
 def abrirMenuRecepcion():
     print("--- En el Menu De Recepcion ---\n")
     patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ") 
-    if(patenteIngresada != '0') :  
+    posEnArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
+    esValida = verificarPatente(patenteIngresada)
+    print(posEnArreglo)
+    if(posEnArreglo != -1): estado = patenteData[1][posEnArreglo]
+    while (not esValida or posEnArreglo == -1 or estado != 'P'):
+        if(patenteIngresada == '0'): break
+        if(not esValida): print("La patente tiene que tener entre 6 y 7 caracteres")
+        elif(posEnArreglo == -1): print("La patente no se encuentra registrada")
+        else : print("El estado del camion no es Pendiente")
+        patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ")   
         posEnArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
         esValida = verificarPatente(patenteIngresada)
-        print(posEnArreglo)
         if(posEnArreglo != -1): estado = patenteData[1][posEnArreglo]
-        while (not esValida or posEnArreglo == -1 or estado != 'P'):
-            if(patenteIngresada == '0'): break
-            if(not esValida): print("La patente tiene que tener entre 6 y 7 caracteres")
-            elif(posEnArreglo == -1): print("La patente no se encuentra registrada")
-            else : print("El estado del camion no es Pendiente")
-            patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ")   
-            posEnArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
-            esValida = verificarPatente(patenteIngresada)
-            if(posEnArreglo != -1): estado = patenteData[1][posEnArreglo]
-        cambiarEstado(posEnArreglo, 'E')
-        print("Camion ingresado exitosamente")
-        print(patenteData)
-
-# def cargaDatosYMostrarPesoNetoCamion():
-#     patente = input("Cargar la patente del camion\n")
-#     producto = input("Ingresar el producto (soja|maiz)\n")
-#     validarIngresoProducto(producto)
-#     pesoBruto = int(input("Cargar el peso bruto del camion\n"))
-#     tara = int(input("Cargar la tara del camion\n"))
-#     pesoNeto = obtenerPesoNeto(patente,pesoBruto,tara)
-#     actualzarValoresReportes(patente,producto,pesoNeto)
-
-# def actualzarValoresReportes(patente,producto,pesoNeto):
-#     global camionesSoja, pNetoMaiz, pNetoSoja, patenteMayorSoja, patenteMenorMaiz, camionesMaiz, camionesSoja, mayorCantSoja, menorCantMaiz
-#     if(producto=="soja"):
-#         camionesSoja = camionesSoja+1
-#         pNetoSoja = pNetoSoja+pesoNeto
-#         if(pesoNeto>mayorCantSoja): 
-#             mayorCantSoja = pesoNeto
-#             patenteMayorSoja = patente
-#     if(producto=="maiz"):
-#         camionesMaiz = camionesMaiz + 1
-#         pNetoMaiz = pNetoMaiz + pesoNeto
-#         if(pesoNeto<menorCantMaiz): 
-#             menorCantMaiz = pesoNeto
-#             patenteMenorMaiz = patente
-
-# def validarIngresoProducto(producto):
-#     while(producto!="soja" and producto!='maiz'):
-#         producto = input("Por favor ingresar un producto valido (soja|maiz)\n")
-
-# def obtenerPesoNeto(patente,pesoBruto,tara):
-#     resultado = pesoBruto-tara
-#     print("El peso neto de", patente ,"es:", pesoBruto-tara)
-#     return resultado
-
-# def abrirMenuRecepcion():
-#     seguirCargando = 'Y'
-#     
-#     while(seguirCargando == 'Y'):
-#         cargaDatosYMostrarPesoNetoCamion()
-#         seguirCargando = input("Si se desea seguir cargando camiones escribir Y, de lo contrario escribir N: \n")
+    if(patenteIngresada == '0'): return
+    cambiarEstado(posEnArreglo, 'E')
+    print("Camion ingresado exitosamente")
+    print(patenteData)
 
 # FUNCIONES RECEPCION
 
 
 # FUNCIONES INGRESAR PESO BRUTO
-
 
 def verificarPatente(patente):
     return len(patente)>=6 and len(patente)<=7
