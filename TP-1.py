@@ -225,7 +225,7 @@ def abrirAdministracionProductoABM():
     seleccionABM = '0'
     while(seleccionABM != 'V'):
         imprimirMenu(menuABM,5)
-        seleccionABM = input("Seleccionar una accion ABM:\n")
+        seleccionABM = input("Seleccionar una accion ABM:\n").upper()
         administracionProductoRouter(seleccionABM)
 
 def seleccionarMenuAdministracion(seleccion):
@@ -244,7 +244,7 @@ def abrirMenuAdministraciones():
     seleccionAdministraciones = "0"
     while(seleccionAdministraciones!='V'):
         imprimirMenu(menuAdministraciones,8)
-        seleccionAdministraciones = elegirElementoDeMenu()
+        seleccionAdministraciones = elegirElementoDeMenu().upper()
         seleccionarMenuAdministracion(seleccionAdministraciones)
 
 # FUNCIONES ADMINISTRACION
@@ -263,18 +263,14 @@ def abrirEntregaDeCupos():
     if patenteData[0][7] != "" : 
         print("Se alcanzo la cantidad maxima de cupos diarios.")
     else :
-        patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ") 
-        posEnArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
-        esValida = verificarPatente(patenteIngresada)
+        esValida = False
         while (not esValida or posEnArreglo != -1):
-            if(patenteIngresada == '0'): break
-            print(esValida, patenteIngresada)
-            if(not esValida): print("La patente tiene que estar entre 6 y 7 caracteres")
-            else : print("La patente ya fue registrada")
             patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ")   
             posEnArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
             esValida = verificarPatente(patenteIngresada)
-        if(patenteIngresada == '0'): return
+            if(patenteIngresada == '0'): return
+            if(not esValida): print("La patente debe tener 6 o 7 caracteres")
+            else : print("La patente ya fue registrada")
         cargarPatenteYEstado(patenteIngresada)
         print("Patente ingresada exitosamente")
         print(patenteData)
@@ -286,21 +282,18 @@ def abrirEntregaDeCupos():
 
 def abrirMenuRecepcion():
     print("--- En el Menu De Recepcion ---\n")
-    patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ") 
-    posEnArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
-    esValida = verificarPatente(patenteIngresada)
-    print(posEnArreglo)
-    if(posEnArreglo != -1): estado = patenteData[1][posEnArreglo]
+    esValida = False
+    estado = 'X'
     while (not esValida or posEnArreglo == -1 or estado != 'P'):
-        if(patenteIngresada == '0'): break
-        if(not esValida): print("La patente tiene que tener entre 6 y 7 caracteres")
-        elif(posEnArreglo == -1): print("La patente no se encuentra registrada")
-        else : print("El estado del camion no es Pendiente")
         patenteIngresada = input("Ingrese una patente (o 0 para volver al menu anterior): ")   
         posEnArreglo = buscarElementoEnArreglo(patenteIngresada, patenteData[0], 7)
         esValida = verificarPatente(patenteIngresada)
-        if(posEnArreglo != -1): estado = patenteData[1][posEnArreglo]
-    if(patenteIngresada == '0'): return
+        if(patenteIngresada == '0'): return
+        if(posEnArreglo != -1): 
+            estado = patenteData[1][posEnArreglo]
+        if(not esValida): print("La patente debe tener 6 o 7 caracteres")
+        elif(posEnArreglo == -1): print("La patente no se encuentra registrada")
+        elif(estado != 'P') : print("El estado del camion no es Pendiente")
     cambiarEstado(posEnArreglo, 'E')
     print("Camion ingresado exitosamente")
     print(patenteData)
