@@ -16,6 +16,11 @@ menuPrincipal = ["1 - Administraciones","2 - Entrega de Cupos","3 - Recepcion","
 menuAdministraciones = ["A - Titulares","B - Productos","C - Rubros","D - Rubros x Producto","E - Silos","F - Sucursales","G - Producto Por Titular","V - Volver al Menu Principal"]
 menuABM = ["A - Alta", "B - Baja","C - Consulta","M - Modificacion","V - Volver al Menu Anterior"]
 
+poolProductos = ["TRIGO","SOJA","MAIZ","GIRASOL","CEBADA"]
+productos = ["","",""]
+patenteData = [["","","","","","","",""],["","","","","","","",""]]
+productosCamiones = ["","","","","","","",""]
+pesosArr=[[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]] # PESO BRUTO / TARA
 # FUNCIONES GENERALES
 
 
@@ -330,11 +335,7 @@ def abrirMenuRecepcion():
 
 # FUNCIONES REPORTE
 
-poolProductos = ["TRIGO","SOJA","MAIZ","GIRASOL","CEBADA"]
-productos = ["TRIGO","MAIZ","CEBADA"]
-patenteData = [["paten1","paten2","paten3","paten4","paten5","paten6","paten7","paten8"],["E","P","C","C","C","C","C","C"]]
-productosCamiones = ["TRIGO","MAIZ","MAIZ","MAIZ","TRIGO","CEBADA","CEBADA","CEBADA"]
-pesosArr=[[150,321,2000,2000,1000,3000,1000,2000],[10,32,1000,1000,100,1000,100,1000]] # PESO BRUTO / TARA
+
 
 def copiarSiCamionCompleto(arrACopiar,esPesoNeto=False):
     arr = ["","","","","","","",""]
