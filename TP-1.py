@@ -107,6 +107,12 @@ def ordenarArreglo(arr):
 
 def cambiarEstado(posicion, nuevoEstado):
     patenteData[1][posicion] = nuevoEstado
+    
+def tieneProductosAsociados(prodTentativo):
+    for i in range(0,8):
+        if(productosCamiones[i]==prodTentativo): return False
+    return True
+    
 
 # FUNCIONES GENERALES
 
@@ -192,7 +198,7 @@ def darDeBajaProducto():
     idxEliminar = int(input("Ingresar el indice del producto a eliminar: "))
     if(idxEliminar >= 3 or idxEliminar < 0): return prYellow("Ingresar un indice entre 0 y 2")
     if(productos[idxEliminar]==""): return prYellow("La casilla no contiene un producto")
-    # VERIFICAR QUE NO TENGA CAMIONES ASOCIADOS
+    if(not tieneProductosAsociados(productos[idxEliminar])): return prYellow("El producto tiene camiones asociados")
     clear()
     productos[idxEliminar]=""
     return prCyan("Producto eliminado")
@@ -206,11 +212,11 @@ def modificarProducto():
     idxModificar = int(input("Ingresar el indice del producto a modificar: "))
     if(idxModificar >= 3 or idxModificar < 0): return prYellow("Ingresar un indice entre 0 y 2")
     if(productos[idxModificar]==""): return prYellow("La casilla no contiene un producto")
+    if(not tieneProductosAsociados(productos[idxModificar])): return prYellow("El producto tiene camiones asociados")
     clear()
     imprimirProductosNoSeleccionados()
     productoAIngresar = input("Seleccione uno de ellos:").upper()
     if(validarProductoIngresado(productoAIngresar)):
-        # VERIFICAR QUE NO TENGA CAMIONES ASOCIADOS
         productos[idxModificar] = productoAIngresar
         return prCyan("MODIFICADO!")        
 
