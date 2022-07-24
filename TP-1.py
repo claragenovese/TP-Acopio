@@ -262,17 +262,24 @@ def abrirMenuAdministraciones():
 
 # FUNCIONES ENTREGA DE CUPOS
 
-def cargarPatenteYEstado(patente):
+def cargarPatenteEstadoYProducto(patente, prodIdx):
     idx = 0
     while(patenteData[0][idx]!= ""):
         idx = idx + 1
     patenteData[1][idx] = "P"
     patenteData[0][idx] = patente
+    productosCamiones[idx] = productos[prodIdx]
 
+def validarIndice(prod):
+    while(prod>2 or prod<0):
+        print("Indice no valido")
+        prod = int(input("Ingrese el indice del producto que carga el camion: "))
+    return prod
 
 def abrirEntregaDeCupos():
     if patenteData[0][7] != "" : 
         print("Se alcanzo la cantidad maxima de cupos diarios.")
+    elif esArregloVacio(productos, 3): print("Primero debe ingresar los productos")
     else :
         esValida = False
         while (not esValida or posEnArreglo != -1):
@@ -281,10 +288,18 @@ def abrirEntregaDeCupos():
             esValida = verificarPatente(patenteIngresada)
             if(patenteIngresada == '0'): return
             if(not esValida): print("La patente debe tener 6 o 7 caracteres")
-            else : print("La patente ya fue registrada")
-        cargarPatenteYEstado(patenteIngresada)
+            if(posEnArreglo != -1) : print("La patente ya fue registrada")
+        print("Los productos disponibles son: /n")
+        prCyan("------------")
+        imprimirElementosDeArreglo(productos, 3)
+        prCyan("------------")
+        prodIdx = int(input("Ingrese el indice del producto que carga el camion: "))
+        prodIdx = validarIndice(prodIdx)
+        cargarPatenteEstadoYProducto(patenteIngresada, prodIdx)
         print("Patente ingresada exitosamente")
         print(patenteData)
+        print(productosCamiones)
+
 
 # FUNCIONES ENTREGA DE CUPOS
 
