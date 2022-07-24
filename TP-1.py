@@ -17,9 +17,9 @@ menuAdministraciones = ["A - Titulares","B - Productos","C - Rubros","D - Rubros
 menuABM = ["A - Alta", "B - Baja","C - Consulta","M - Modificacion","V - Volver al Menu Anterior"]
 
 poolProductos = ["TRIGO","SOJA","MAIZ","GIRASOL","CEBADA"]
-productos = ["SOJA","",""]
-patenteData = [["paten1","","","","","","",""],["","","","","","","",""]]
-productosCamiones = ["SOJA","","","","","","",""]
+productos = ["","",""]
+patenteData = [["","","","","","","",""],["","","","","","","",""]]
+productosCamiones = ["","","","","","","",""]
 pesosArr=[[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]] # PESO BRUTO / TARA
 # FUNCIONES GENERALES
 
