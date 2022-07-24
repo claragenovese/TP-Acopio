@@ -406,8 +406,11 @@ def imprimirReporte():
             print("El peso neto de ",productos[prodIdx],"es ", pesoNetoTot ,"kg")
             if(cantidad!=0):
                print("El peso neto promedio de camion de ",productos[prodIdx],"es ", pesoNetoTot/cantidad ,"kg")
-            print("El camion que mas ",productos[prodIdx],"descargo es ", arrPatenteMayorMenor[0],"con ",arrMayorMenor[0] ,"kg")
-            print("El camion que menos ",productos[prodIdx],"descargo es ", arrPatenteMayorMenor[1],"con ",arrMayorMenor[1] ,"kg")
+            if(cantidad==1):
+                print("El unico camion que descargo ",productos[prodIdx],"es ", arrPatenteMayorMenor[0],"con ",arrMayorMenor[0] ,"kg")
+            if(cantidad>=2):
+                print("El camion que mas ",productos[prodIdx],"descargo es ", arrPatenteMayorMenor[0],"con ",arrMayorMenor[0] ,"kg")
+                print("El camion que menos ",productos[prodIdx],"descargo es ", arrPatenteMayorMenor[1],"con ",arrMayorMenor[1] ,"kg")
             prCyan("------------")  
 
     prCyan("------------")       
